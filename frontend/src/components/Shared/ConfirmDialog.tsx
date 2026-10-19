@@ -6,6 +6,7 @@ interface ConfirmDialogProps {
   message: string
   confirmText?: string
   cancelText?: string
+  type?: 'danger' | 'warning' | 'info'
   onConfirm: () => void
   onCancel: () => void
 }
@@ -16,6 +17,7 @@ export default function ConfirmDialog({
   message,
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
+  type = 'danger',
   onConfirm,
   onCancel
 }: ConfirmDialogProps) {

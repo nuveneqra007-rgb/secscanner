@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { File as FileIcon, Bug, Shield, ChevronDown, ChevronUp, Package, ShieldCheck, ShieldAlert, Download, AlertTriangle, XCircle, Info, Database } from 'lucide-react'
+import { File as FileIcon, Bug, Shield, ChevronDown, ChevronUp, Package, ShieldCheck, ShieldAlert, Download, AlertTriangle, XCircle, Info, Database, CheckCircle2 } from 'lucide-react'
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
