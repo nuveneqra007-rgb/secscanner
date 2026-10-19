@@ -16,7 +16,7 @@ Escanea dominios, IPs y archivos en busca de vulnerabilidades — sin internet, 
 
 ---
 
-[🔴 Demo en vivo](https://secscanner-nuveneqra007-rgb.vercel.app) &nbsp;·&nbsp; [📖 Documentación](#-guía-de-inicio-rápido) &nbsp;·&nbsp; [🐛 Reportar Bug](https://github.com/nuveneqra007-rgb/secscanner/issues)
+[🔴 Demo en vivo](https://secscanner-theta.vercel.app) &nbsp;·&nbsp; [📖 Documentación](#-guía-de-inicio-rápido) &nbsp;·&nbsp; [🐛 Reportar Bug](https://github.com/nuveneqra007-rgb/secscanner/issues)
 
 </div>
 
