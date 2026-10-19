@@ -59,13 +59,26 @@ app = FastAPI(title="SecScanner API", version="2.0.0", lifespan=lifespan)
 # Middlewares de seguridad (orden importa: primero CORS, luego los custom)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.origins_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
+# CORS: con credentials=True no se puede usar allow_origins=["*"]
+# Usamos allow_origin_regex para permitir cualquier origen cuando ALLOWED_ORIGINS=*
+_origins = settings.origins_list
+if _origins == ["*"]:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r".*",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 app.include_router(auth.router)
 app.include_router(scans.router)
