@@ -18,25 +18,36 @@ from app.middleware.security import SecurityHeadersMiddleware
 async def lifespan(app: FastAPI):
     os.makedirs("data", exist_ok=True)
     os.makedirs("data/uploads", exist_ok=True)
-    Base.metadata.create_all(bind=engine)
 
-    # Crear usuario admin inicial si no existe
-    db = SessionLocal()
-    try:
-        admin = db.query(User).filter(User.username == settings.AUTH_USERNAME).first()
-        if not admin:
-            hashed = get_password_hash(settings.AUTH_PASSWORD)
-            new_admin = User(
-                username=settings.AUTH_USERNAME,
-                email=f"{settings.AUTH_USERNAME}@secscanner.local",
-                full_name="Administrador",
-                hashed_password=hashed,
-                is_admin=True,
-            )
-            db.add(new_admin)
-            db.commit()
-    finally:
-        db.close()
+    # Reintentar conexión a DB hasta 5 veces (útil en cold starts de producción)
+    import time
+    for attempt in range(5):
+        try:
+            Base.metadata.create_all(bind=engine)
+            db = SessionLocal()
+            try:
+                admin = db.query(User).filter(User.username == settings.AUTH_USERNAME).first()
+                if not admin:
+                    hashed = get_password_hash(settings.AUTH_PASSWORD)
+                    new_admin = User(
+                        username=settings.AUTH_USERNAME,
+                        email=f"{settings.AUTH_USERNAME}@secscanner.local",
+                        full_name="Administrador",
+                        hashed_password=hashed,
+                        is_admin=True,
+                    )
+                    db.add(new_admin)
+                    db.commit()
+            finally:
+                db.close()
+            print(f"✅ Database connected on attempt {attempt + 1}")
+            break
+        except Exception as e:
+            print(f"⚠️  DB connection attempt {attempt + 1}/5 failed: {e}")
+            if attempt < 4:
+                time.sleep(3)
+            else:
+                print("❌ Could not connect to database after 5 attempts — starting anyway")
 
     start_scheduler()
     yield
